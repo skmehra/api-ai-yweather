@@ -29,7 +29,8 @@ def webhook():
     res = processRequest(req)
 
     res = json.dumps(res, indent=4)
-    # print(res)
+    print("Response: ")
+    print(res)
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
@@ -44,6 +45,7 @@ def processRequest(req):
         return {}
     yql_url = baseurl + urlencode({'q': yql_query}) + "&format=json"
     result = urlopen(yql_url).read()
+    print(yql_url)
     data = json.loads(result)
     res = makeWebhookResult(data)
     return res
@@ -81,8 +83,9 @@ def makeWebhookResult(data):
     condition = item.get('condition')
     if condition is None:
         return {}
-
-    # print(json.dumps(item, indent=4))
+    
+    print("json.dumps: ")
+    print(json.dumps(item, indent=4))
 
     speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
              ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
@@ -94,7 +97,7 @@ def makeWebhookResult(data):
         "speech": speech,
         "displayText": speech,
         # "data": data,
-        # "contextOut": [],
+        "contextOut": [],
         "source": "apiai-weather-webhook-sample"
     }
 
